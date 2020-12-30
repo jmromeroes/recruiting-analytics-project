@@ -34,6 +34,7 @@ class Cohort(models.Model):
 
     def to_domain(self) -> CohortInformation:
         return CohortInformation(
+            id=self.id,
             name=self.name,
             platform_name=self.platform.name,
             opportunity_objective=self.opportunity_objective,

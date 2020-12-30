@@ -16,7 +16,4 @@ class Manager(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE
     )
-
-class ManagerCohort(models.Model):
-    candidate = models.ForeignKey(Manager, on_delete=models.CASCADE)
-    cohort = models.ForeignKey(Cohort, on_delete=models.CASCADE)
+    cohorts = models.ManyToManyField(Cohort)

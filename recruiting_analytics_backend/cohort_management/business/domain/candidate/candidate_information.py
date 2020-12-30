@@ -12,7 +12,14 @@ class LinkInformation(BaseValueObject):
 
 
 @attr.s(auto_attribs=True, frozen=True)
+class JobInformation(BaseValueObject):
+    name: str
+    organizations: List[OrganizationInformation]
+
+
+@attr.s(auto_attribs=True, frozen=True)
 class CandidateInformation(BaseValueObject):
+    id: int
     username: str
     country: str
     platform_name: str
@@ -20,6 +27,10 @@ class CandidateInformation(BaseValueObject):
     bio: str
     strengths: List[str]
     interests: List[str]
-    jobs: List[str]
+    jobs: List[JobInformation]
     links: List[LinkInformation]
-    previous_organizations: List[OrganizationInformation]
+    cohort_id: int
+    number_of_strengths: int
+    number_of_awards: int
+    number_of_jobs: int
+    number_of_projects: int

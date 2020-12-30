@@ -11,7 +11,7 @@ from cohort_management.models.cohort import Cohort, Organization
 import datetime
 from django_countries.fields import CountryField
 
-from cohort_management.business.domain.candidate.candidate_information import CandidateInformation, LinkInformation
+from cohort_management.business.domain.candidate.candidate_information import CandidateInformation, LinkInformation, JobInformation
 
 
 class Strength(models.Model):
@@ -22,13 +22,9 @@ class Interest(models.Model):
     name = models.CharField(max_length=100)
 
 
-class Job(models.Model):
-    name = models.CharField(max_length=100)
-
-
 class Candidate(models.Model):
     complete_profile = models.BooleanField(default=False)
-    verified = models.BooleanField(default=True)
+    verified = models.BooleanField(default=False)
     country = models.CharField(max_length=100)
     platform = models.ForeignKey(Platform, on_delete=models.CASCADE)
     platform_user_id = models.CharField(blank=True, null=True, max_length=150)
@@ -42,15 +38,17 @@ class Candidate(models.Model):
     number_of_projects = models.PositiveIntegerField()
     strengths = models.ManyToManyField(Strength)
     interests = models.ManyToManyField(Interest)
-    organizations = models.ManyToManyField(Organization)
-    jobs = models.ManyToManyField(Job)
+    cohort = models.ForeignKey(Cohort, on_delete=models.CASCADE)
 
     def to_domain(self) -> CandidateInformation:
         links = CandidateLink.objects.filter(candidate=self)
+        jobs = Job.objects.filter(candidate=self)
 
         return CandidateInformation(
+            id=self.id,
             username=self.platform_username,
             country=self.country,
+            verified=self.verified,
             platform_name=self.platform.name,
             public_id=self.platform_public_id,
             bio=self.platform_candidate_bio,
@@ -58,10 +56,15 @@ class Candidate(models.Model):
                 map(lambda strength: strength.name, self.strengths)),
             interests=list(
                 map(lambda interest: interest.name, self.interests)),
-            previous_organizations=list(
-                map(lambda organization: organization.to_domain(), self.organizations)),
+            jobs=list(
+                map(lambda job: job.to_domain(), jobs)),
             links=list(
-                map(lambda link: link.to_domain(), links))
+                map(lambda link: link.to_domain(), links)),
+            cohort_id=self.cohort.id,
+            number_of_strengths=self.number_of_strengths,
+            number_of_awards=self.number_of_awards,
+            number_of_jobs=self.number_of_jobs,
+            number_of_projects=self.number_of_projects
         )
 
 
@@ -74,4 +77,17 @@ class CandidateLink(models.Model):
         return LinkInformation(
             name=self.name,
             url=self.url
+        )
+
+
+class Job(models.Model):
+    name = models.CharField(max_length=100)
+    organizations = models.ManyToManyField(Organization)
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
+
+    def to_domain(self) -> JobInformation:
+        return JobInformation(
+            name=self.name,
+            organizations=list(
+                map(lambda organization: organization.to_domain(), self.organizations)),
         )
