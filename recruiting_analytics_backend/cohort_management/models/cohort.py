@@ -8,9 +8,18 @@ from cohort_management.models.platform import Platform
 
 import datetime
 
+from cohort_management.business.domain.cohort.cohort_information import OrganizationInformation, CohortInformation
+
+
 class Organization(models.Model):
     name = models.CharField(max_length=100)
     picture = models.CharField(max_length=200)
+
+    def to_domain(self) -> OrganizationInformation:
+        return OrganizationInformation(
+            name=self.name,
+            picture=self.picture
+        )
 
 
 class Cohort(models.Model):
@@ -22,3 +31,12 @@ class Cohort(models.Model):
     opportunity_objective = models.CharField(max_length=100)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     slug = models.CharField(max_length=200)
+
+    def to_domain(self) -> CohortInformation:
+        return CohortInformation(
+            name=self.name,
+            platform_name=self.platform.name,
+            opportunity_objective=self.opportunity_objective,
+            organization=self.organization,
+            url=self.url
+        )
