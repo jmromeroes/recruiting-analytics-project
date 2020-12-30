@@ -45,7 +45,6 @@ class Candidate(models.Model):
         jobs = Job.objects.filter(candidate=self)
 
         return CandidateInformation(
-            id=self.id,
             username=self.platform_username,
             country=self.country,
             verified=self.verified,
@@ -64,7 +63,8 @@ class Candidate(models.Model):
             number_of_strengths=self.number_of_strengths,
             number_of_awards=self.number_of_awards,
             number_of_jobs=self.number_of_jobs,
-            number_of_projects=self.number_of_projects
+            number_of_projects=self.number_of_projects,
+            number_of_interests=self.number_of_interests
         )
 
 

@@ -5,7 +5,6 @@ from django.conf import settings
 
 from django.contrib.auth.models import User
 
-from cohort_management.models.cohort import Cohort
 import datetime
 
 class Manager(models.Model):
@@ -16,4 +15,3 @@ class Manager(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE
     )
-    cohorts = models.ManyToManyField(Cohort)

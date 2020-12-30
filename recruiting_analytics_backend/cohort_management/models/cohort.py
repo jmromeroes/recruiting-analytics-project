@@ -5,6 +5,7 @@ from django.conf import settings
 
 from django.contrib.auth.models import User
 from cohort_management.models.platform import Platform
+from cohort_management.models.manager import Manager
 
 import datetime
 
@@ -29,16 +30,16 @@ class Cohort(models.Model):
     platform = models.ForeignKey(Platform, on_delete=models.CASCADE)
     platform_opportunity_id = models.CharField(max_length=100)
     opportunity_objective = models.CharField(max_length=100)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
     slug = models.CharField(max_length=200)
+    owner = models.ForeignKey(Manager, on_delete=models.CASCADE)
 
     def to_domain(self) -> CohortInformation:
         return CohortInformation(
-            id=self.id,
             name=self.name,
             platform_name=self.platform.name,
             opportunity_objective=self.opportunity_objective,
             opportunity_id=self.platform_opportunity_id,
-            organization=self.organization,
+            organizations=[self.organization.to_domain()] if self.organization else [],
             slug=self.slug
         )

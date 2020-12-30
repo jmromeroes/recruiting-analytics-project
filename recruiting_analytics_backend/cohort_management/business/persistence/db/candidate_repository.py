@@ -1,6 +1,6 @@
 import json
 
-from typing import List
+from typing import List, Dict
 
 from cohort_management.models.cohort import Cohort, Organization
 from cohort_management.models.candidate import Candidate, Strength, Interest, Job, CandidateLink
@@ -8,7 +8,7 @@ from cohort_management.business.domain.candidate.candidate_information import Ca
 from cohort_management.models.platform import Platform
 
 from django.contrib.auth.models import User
-from recruiting_analytics_backend.business.repositories.base import NotFoundRepositoryException, RepositoryException
+from recruiting_analytics_backend.business.repositories.base import NotFoundRepositoryException, RepositoryException, DuplicatedRepositoryException
 
 
 class CandidateRepository:
@@ -25,12 +25,15 @@ class CandidateRepository:
         except Exception as e:
             return RepositoryException(e)
 
-
     @staticmethod
-    def get_candidate_by_id(candidate_id: int) -> CandidateInformation:
+    def get_candidate_by_cohort_id_and_platform(cohort_id: str, platform_name: str) -> CandidateInformation:
         try:
-            candidate = Candidate.objects.get(id=candidate_id)
+            platform = Platform.objects.get(
+                name=platform_name)
 
+            candidate = Candidate.objects.get(
+                cohort_id=cohort_id, platform=platform).exists()
+            
             return candidate.to_domain()
         except Candidate.DoesNotExist:
             return NotFoundRepositoryException("Candidate with id '{}' was not found in the database".format(candidate_id))
@@ -38,26 +41,18 @@ class CandidateRepository:
             return RepositoryException(e)
 
     @staticmethod
-    def add_or_update_candidate(candidate_information: CandidateInformation) -> CandidateInformation:
+    def add_candidate(candidate_information: CandidateInformation) -> CandidateInformation:
         try:
             platform = Platform.objects.get(
                 name=candidate_information.platform_name)
 
             candidate_exists = Candidate.objects.filter(
-                id=candidate_information.id).exists()
+                cohort_id=candidate_information.cohort_id, platform=platform).exists()
 
             if candidate_exists:
-                candidate = Candidate.objects.get(id=candidate_information.id)
-                candidate.strengths.clear()
-                candidate.interests.clear()
-                candidate.jobs.clear()
-                candidate.links.clear()
-                candidate.previous_organizations.clear()
-                Job.objects.filter(candidate=candidate).all().delete()
-                CandidateLink.objects.filter(candidate=candidate).all().delete()
-            else:
-                candidate = Candidate()
+                raise DuplicatedRepositoryException("Candidate already exists")
 
+            candidate = Candidate()
             candidate.complete_profile = True
             candidate.verified = False
             candidate.country = candidate_information.country
@@ -89,7 +84,7 @@ class CandidateRepository:
                 for organization in job.organizations:
                     organization_list.append(Organization.objects.get_or_create(
                         name=organization.name, picture=organization.picture).id)
-                job_db.organizations.add(*organization_list)    
+                job_db.organizations.add(*organization_list)
 
             for link in candidate_information.links:
                 link_db = CandidateLink()
@@ -100,8 +95,6 @@ class CandidateRepository:
 
             return candidate.to_domain()
         except Platform.DoesNotExist:
-            return NotFoundRepositoryException("Platform with name '{}' was not found in the database".format(candidate_information.platform_name))
+            raise NotFoundRepositoryException("Platform with name '{}' was not found in the database".format(candidate_information.platform_name))
         except Exception as e:
-            return RepositoryException(e)
-
-    
+            raise RepositoryException(e)

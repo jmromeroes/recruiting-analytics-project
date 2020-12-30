@@ -19,7 +19,6 @@ class JobInformation(BaseValueObject):
 
 @attr.s(auto_attribs=True, frozen=True)
 class CandidateInformation(BaseValueObject):
-    id: int
     username: str
     country: str
     platform_name: str
@@ -34,3 +33,4 @@ class CandidateInformation(BaseValueObject):
     number_of_awards: int
     number_of_jobs: int
     number_of_projects: int
+    number_of_interests: int
