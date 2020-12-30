@@ -40,6 +40,7 @@ BASE_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'recruiting_analytics_backend',
+    'cohort_management'
 ]
 
 MIDDLEWARE = [

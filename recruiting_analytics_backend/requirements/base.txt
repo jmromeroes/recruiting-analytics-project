@@ -9,4 +9,5 @@ django-grappelli
 requests
 django-cors-headers
 djangorestframework
+djangorestframework_jwt==1.11.0
 django-environ
