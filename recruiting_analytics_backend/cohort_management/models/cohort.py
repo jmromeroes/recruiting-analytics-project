@@ -38,6 +38,7 @@ class Cohort(models.Model):
             name=self.name,
             platform_name=self.platform.name,
             opportunity_objective=self.opportunity_objective,
+            opportunity_id=self.platform_opportunity_id,
             organization=self.organization,
-            url=self.url
+            slug=self.slug
         )

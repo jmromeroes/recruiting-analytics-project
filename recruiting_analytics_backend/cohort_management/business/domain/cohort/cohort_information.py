@@ -16,5 +16,6 @@ class CohortInformation(BaseValueObject):
     name: str
     platform_name: str
     opportunity_objective: str
+    opportunity_id: str
     organization: OrganizationInformation
-    url: str
+    slug: str

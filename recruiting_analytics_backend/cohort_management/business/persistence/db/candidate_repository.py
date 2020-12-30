@@ -25,8 +25,20 @@ class CandidateRepository:
         except Exception as e:
             return RepositoryException(e)
 
+
     @staticmethod
-    def add_or_update_candidate(candidate_information: CandidateInformation) -> List[CandidateInformation]:
+    def get_candidate_by_id(candidate_id: int) -> CandidateInformation:
+        try:
+            candidate = Candidate.objects.get(id=candidate_id)
+
+            return candidate.to_domain()
+        except Candidate.DoesNotExist:
+            return NotFoundRepositoryException("Candidate with id '{}' was not found in the database".format(candidate_id))
+        except Exception as e:
+            return RepositoryException(e)
+
+    @staticmethod
+    def add_or_update_candidate(candidate_information: CandidateInformation) -> CandidateInformation:
         try:
             platform = Platform.objects.get(
                 name=candidate_information.platform_name)
@@ -42,7 +54,7 @@ class CandidateRepository:
                 candidate.links.clear()
                 candidate.previous_organizations.clear()
                 Job.objects.filter(candidate=candidate).all().delete()
-                Link.objects.filter(candidate=candidate).all().delete()
+                CandidateLink.objects.filter(candidate=candidate).all().delete()
             else:
                 candidate = Candidate()
 
@@ -67,19 +79,29 @@ class CandidateRepository:
                     Interest.objects.get_or_create(name=interest).id)
             candidate.interests.add(*interests_list)
 
-            jobs_list = []
             for job in candidate_information.jobs:
                 organization_list = []
-                job = 
+                job_db = Job()
+                job_db.name = job.name
+                job_db.candidate = candidate
+                job_db.save()
+
                 for organization in job.organizations:
                     organization_list.append(Organization.objects.get_or_create(
                         name=organization.name, picture=organization.picture).id)
+                job_db.organizations.add(*organization_list)    
 
-                strengths_list.append(
-                    Strength.objects.get_or_create(name=strength))
-            candidate.strengths = strengths_list
+            for link in candidate_information.links:
+                link_db = CandidateLink()
+                link_db.name = link.name
+                link_db.link = link.link
+                link_db.candidate = candidate
+                link_db.save()
 
+            return candidate.to_domain()
         except Platform.DoesNotExist:
             return NotFoundRepositoryException("Platform with name '{}' was not found in the database".format(candidate_information.platform_name))
         except Exception as e:
             return RepositoryException(e)
+
+    
