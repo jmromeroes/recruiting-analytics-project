@@ -11,6 +11,9 @@
       id="add-cohort-modal"
       ref="add-cohort-modal"
       hide-footer
+      hide-header
+      no-close-on-esc
+      no-close-on-backdrop
       size="md"
       centered
     >

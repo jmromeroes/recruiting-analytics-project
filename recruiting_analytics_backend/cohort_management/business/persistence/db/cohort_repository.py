@@ -19,8 +19,8 @@ class CohortRepository:
         try:
             user = User.objects.get(username=manager_username)
             manager = Manager.objects.get(user=user)
-
-            return list(map(lambda cohort: cohort.to_domain(), manager.cohorts))
+            cohorts = Cohort.objects.filter(owner=manager)
+            return list(map(lambda cohort: cohort.to_domain(), cohorts))
         except User.DoesNotExist:
             raise NotFoundRepositoryException("User with username '{}' was not found in the database".format(manager_username))
         except Manager.DoesNotExist:

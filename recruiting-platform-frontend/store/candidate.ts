@@ -11,8 +11,12 @@ import { candidateStore, cohortStore } from "~/store"
 })
 export default class candidate extends VuexModule {
     candidates: Candidate[] = [];
-    errorMessage: string = "";
+    _errorMessage: string = "";
     private candidatesService = new CandidatesService();
+
+    get errorMessage() {
+        return this._errorMessage;
+    }
 
     @Action
     fetchCandidates() {
@@ -21,6 +25,9 @@ export default class candidate extends VuexModule {
             cohort =>
                 this.candidatesService.fetchCandidatesInCohort(cohort.id).then(candidates => {
                     this.setCandidates(candidates)
+                })
+                .catch(error => {
+                    this.setErrorMessage(error.toString())
                 })
         )
     }
@@ -33,11 +40,19 @@ export default class candidate extends VuexModule {
                 this.candidatesService.addCandidate(cohort.id, publicId).then(candidates => {
                     this.fetchCandidates()
                 })
+                .catch(error => {
+                    this.setErrorMessage(error.toString())
+                })
         )
     }
 
     @Mutation
     setCandidates(candidates: Candidate[]) {
         this.candidates = candidates;
+    }
+
+    @Mutation
+    setErrorMessage(errorMessage: string) {
+        this._errorMessage = errorMessage;
     }
 }

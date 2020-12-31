@@ -9,7 +9,7 @@
       <div class="description-3 yellow-text">STEP {{ currentStep }}</div>
     </div>
 
-    <div class="cohort-creator-content">
+    <div class="cohort-creator-content" v-if="currentStep === 0">
       <div class="description-2">
         <b>Welcome to the cohort creator.</b>
       </div>
@@ -17,11 +17,39 @@
         Please follow the next steps so you can create your cohort from a Torre
         opportunity
       </div>
+      <div class="action-buttons">
+        <b-button @click="prevStep()" class="torre-button">
+          Close
+        </b-button>
+        <b-button @click="nextStep()" class="torre-button"> Next </b-button>
+      </div>
     </div>
 
-    <div class="action-buttons">
-      <b-button @click="prevStep()" class="torre-button"> Back </b-button>
-      <b-button class="torre-button"> Next </b-button>
+    <div class="cohort-creator-content" v-else-if="currentStep === 1">
+      <div class="cohort-form">
+        <div class="description-2">
+          <b>Add your opportunity id</b>
+        </div>
+        <div style="text-align: left" class="description-3">
+          Go to the Torre platform an look for the public id of the opportunity
+          you want to reference as base for your cohort
+        </div>
+        <div
+          style="text-align: left; margin-top: 1rem"
+          class="description-3 yellow-text"
+        >
+          Some example ids for you to test with are: awK0LDdn, mwALR7WJ,
+          Yd6vGjdp, VWM2PAwZ, Yd6vLgdp, Prlg9Ldk, EW7k67Wy
+        </div>
+
+        <b-input v-model="opportunityId" placeholder="Assing the opportunity to the cohort"> </b-input>
+        <div class="action-buttons">
+          <b-button @click="prevStep()" class="torre-button">
+            Back
+          </b-button>
+          <b-button @click="nextStep()" :disabled="!opportunityId.length" class="torre-button"> Next </b-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -29,17 +57,38 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Watch, Prop } from "vue-property-decorator";
+import { cohortStore } from "~/store";
+import { CohortStates } from "~/platform/models/cohort/Cohort"
 
 @Component({})
 export default class CohortModalWrapper extends Vue {
   @Prop() hideFunction: Function;
 
   currentStep: number = 0;
+  opportunityId: string = "";
 
-  nextStep() {
-    this.currentStep = this.currentStep + 1;
+  get currentCohortState() {
+    return cohortStore.currentCohortState
   }
 
+  get isLoading() {
+    return cohortStore.currentCohortState === CohortStates.LOADING
+  }
+
+  @Watch("currentCohortState")
+  onStateUpdated(newVal: CohortStates, oldVal: CohortStates){
+      if(newVal === CohortStates.CREATED){
+          this.currentStep += 1
+      }
+  }
+  nextStep() {
+    if(this.currentStep === 1){
+        cohortStore.addCohort(this.opportunityId)
+    } else {
+        this.currentStep += 1
+    }
+  }
+    
   prevStep() {
     if (this.currentStep == 0) {
       this.hideFunction();
@@ -48,6 +97,7 @@ export default class CohortModalWrapper extends Vue {
 
     this.currentStep = this.currentStep - 1;
   }
+
 }
 </script>
 

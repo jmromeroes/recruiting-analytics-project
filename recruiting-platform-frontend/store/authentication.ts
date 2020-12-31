@@ -72,6 +72,7 @@ export default class authentication extends VuexModule {
 
   @Action
   async removeToken() {
+    this.store.$axios.setToken(null, "JWT");
     this._removeToken();
   }
 
@@ -97,11 +98,13 @@ export default class authentication extends VuexModule {
 
   @Action
   obtainTokenFailure() {
+    this.store.$axios.setToken(null, "JWT");
     this._obtainTokenFailure();
   }
 
   @Action
   obtainTokenSuccess(authInfo: AuthenticationGeneralInformation) {
+    this.store.$axios.setToken(authInfo.token.replace('"', ""), "JWT");
     this._obtainTokenSuccess({ authInfo, router: this.store.$router });
   }
 

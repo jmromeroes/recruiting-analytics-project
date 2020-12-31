@@ -2,6 +2,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from cohort_management.business.queries.db.candidate.fetch_cohort_candidates import FetchCohortCandidates
 from cohort_management.business.queries.db.cohort.fetch_manager_cohorts import ListManagerCohorts
@@ -18,7 +20,8 @@ import logging
 _logger = logging.getLogger(__name__)
 
 class CohortsAPI(APIView):
-    permission_classes = (AllowAny,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         try:

@@ -1,5 +1,11 @@
 import { JsonObject, JsonProperty } from "json2typescript";
 
+export enum CohortStates {
+    NOT_CREATED="NOT_CREATED",
+    LOADING="LOADING",
+    CREATED="CREATED"
+}
+
 @JsonObject("Organization")
 export class Organization {
     @JsonProperty("name", String)

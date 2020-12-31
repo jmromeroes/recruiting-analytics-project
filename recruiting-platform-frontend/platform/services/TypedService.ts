@@ -26,7 +26,8 @@ export class TypedService {
       },
       token => token
     );
-    api.defaults.headers.common["Authorization"] = `JWT ${jsonWebToken}`;
+    
+    api.defaults.headers.common["Authorization"] = `JWT ${jsonWebToken.replace("\"", '').slice(0, -1)}`;
     api.defaults.headers.post["Content-Type"] = "application/json";
     api.defaults.headers.post["Accept"] = "application/json";
 
