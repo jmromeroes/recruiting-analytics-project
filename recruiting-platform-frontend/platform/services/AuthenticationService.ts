@@ -20,9 +20,7 @@ export class AuthenticationService extends TypedService {
       if (response.data.token) {
         return Some({
           token: response.data.token,
-          userType: response.data.user_type,
           email: response.data.email,
-          learningTrack: response.data.learning_track
         });
       }
 

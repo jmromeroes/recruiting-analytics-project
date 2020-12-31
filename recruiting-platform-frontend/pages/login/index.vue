@@ -8,6 +8,10 @@
 
     <div class="login-form-wrapper">
       <div class="description-2">To continue, sign in:</div>
+
+      <div class="error-message">
+          {{ loginMessage }}
+      </div>
       <b-form @submit.prevent="onSubmit()" class="login-form">
         <b-input
           v-model="selectedInfo.email"
@@ -42,15 +46,38 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Watch, Prop } from "vue-property-decorator";
+import { authenticationStore } from "~/store";
+import { None } from "space-lift";
+import { AuthenticationStates } from "~/platform/models/authentication/Authentication"
 
 @Component({})
 export default class Login extends Vue {
   selectedInfo = {
     email: "",
-    password: ""
+    password: "",
   };
 
-  onSubmit() {}
+  loginMessage = "";
+  
+  onSubmit() {
+    authenticationStore.obtainToken({
+      username: this.selectedInfo.email,
+      password: this.selectedInfo.password,
+      nextRoute: "",
+      params: None,
+    });
+  }
+
+  get authenticationState() {
+    return authenticationStore.authenticationState;
+  }
+
+  @Watch("authenticationState")
+  onAuthenticationStateUpdate(newState: AuthenticationStates, oldState: AuthenticationStates) {
+      if(newState === AuthenticationStates.AUTHENTICATION_ERROR){
+          this.loginMessage = "Incorrect password.";
+      }
+  }
 }
 </script>
 

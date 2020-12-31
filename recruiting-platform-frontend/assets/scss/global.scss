@@ -23,3 +23,9 @@ Component-specific modules
   filter: blur(5px);
   pointer-events: none;
 }
+
+.error-message {
+  color: $primary-red;
+  margin: 4px 0;
+  font-size: 12px;
+}

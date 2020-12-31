@@ -8,7 +8,6 @@ import {
   AuthenticationStates
 } from "~/platform/models/authentication/Authentication";
 import { AuthenticationService } from "~/platform/services/AuthenticationService";
-import { userTypeStore, learningTrackStore } from "~/store";
 
 @Module({
   name: "authentication",
