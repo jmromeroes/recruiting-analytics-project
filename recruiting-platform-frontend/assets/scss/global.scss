@@ -34,3 +34,22 @@ Component-specific modules
   margin: auto;
   background-color: $primary-background
 }
+
+.modal-content {
+  border: 1px solid $primary-yellow;
+  box-shadow: $basic-box-shadow;
+
+  .modal-header {
+    background-color: $primary-background;
+    border: none;
+
+    .close {
+      color: white;
+      opacity: 1;
+    }
+  }
+}
+
+.yellow-text {
+  color: $primary-yellow;
+}
