@@ -105,4 +105,8 @@ input[type="color"]:focus,
   background-color: $primary-background;
   color: $primary-color;
 }
+
+div {
+  background: $primary-background;
+}
 </style>

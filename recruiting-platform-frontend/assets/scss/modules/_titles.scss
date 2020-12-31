@@ -1,7 +1,7 @@
 @import "../base/_mixins.scss";
 
-$title-1-base: 35;
-$title-2-base: 20;
+$title-1-base: 28;
+$title-2-base: 22;
 
 $decrease-delta: 20;
 
@@ -9,7 +9,7 @@ $decrease-delta: 20;
   $title-name,
   $font-size,
   $color: $primary-color,
-  $font-weight: 500,
+  $font-weight: normal,
   $line-height: $font-size
 ) {
   .#{$title-name} {
@@ -35,7 +35,7 @@ $decrease-delta: 20;
   );
   @include global-title(
     title-2,
-    #{$title-1-base - $decrease-rate * $decrease-delta}px
+    #{$title-2-base - $decrease-rate * $decrease-delta}px
   );
 }
 
