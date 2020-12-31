@@ -6,7 +6,7 @@ from cohort_management.business.domain.cohort.cohort_information import CohortIn
 
 class FetchCohortInformationById(TorreQuery):
     def execute(self, opportunity_id: str, **kwargs) -> CohortInformation:
-        return self.get("opportunities/" + opportunity_id, **kwargs)
+        return self.get(TorreQuery.ROOT_URL_CO + "opportunities/" + opportunity_id, **kwargs)
 
     def _build_organization_dto(self, organization: Dict) -> OrganizationInformation:
         return OrganizationInformation(

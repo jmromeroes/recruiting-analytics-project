@@ -7,7 +7,7 @@ from cohort_management.business.domain.cohort.cohort_information import Organiza
 
 class FetchCandidateById(TorreQuery):
     def execute(self, candidate_id: str, **kwargs) -> CandidateInformation:
-        return self.get("bios/" + candidate_id, **kwargs)
+        return self.get(TorreQuery.ROOT_URL_BIO + "bios/" + candidate_id, **kwargs)
 
     def _build_organization_dto(self, organization: Dict) -> OrganizationInformation:
         return OrganizationInformation(

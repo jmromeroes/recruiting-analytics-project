@@ -47,7 +47,7 @@ class CohortRepository:
             cohort_db.owner = manager
 
             if len(cohort_information.organizations):
-                cohort_db.organization = Organization.objects.get_or_create(name=cohort_information.organizations[0].name, picture=cohort_information.organization.picture)
+                cohort_db.organization = Organization.objects.get_or_create(name=cohort_information.organizations[0].name, picture=cohort_information.organizations[0].picture)[0]
             
             cohort_db.slug = cohort_information.slug
 

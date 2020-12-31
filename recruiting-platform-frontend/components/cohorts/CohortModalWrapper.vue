@@ -51,6 +51,37 @@
         </div>
       </div>
     </div>
+    <div class="cohort-creator-content" v-else-if="currentStep === 2">
+      <div class="cohort-form">
+        <div class="description-2">
+          <b>Add your candidates</b>
+        </div>
+        <div style="text-align: left" class="description-3">
+          Go to the Torre platform an look for the public id of the candidate
+          you want to add to the cohort
+        </div>
+        <div
+          style="text-align: left; margin-top: 1rem"
+          class="description-3 yellow-text"
+        >
+          Some example ids for you to test with are: jmromeroe, torrenegra,
+          rolfveldman, danielabotero, taniazapata, nataliagkioka, kunlaoye
+        </div>
+        <b-input v-model="userId" placeholder="Assing the opportunity to the cohort"> </b-input>
+
+        <div class="candidates-wrapper">
+            <div>
+                
+            </div>
+        </div>
+        <div class="action-buttons">
+          <b-button @click="prevStep()" class="torre-button">
+            Back
+          </b-button>
+          <b-button @click="nextStep()" :disabled="!userId.length || isLoading" class="torre-button"> Next </b-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -58,7 +89,9 @@
 import Vue from "vue";
 import { Component, Watch, Prop } from "vue-property-decorator";
 import { cohortStore } from "~/store";
+import { candidateStore } from "~/store";
 import { CohortStates } from "~/platform/models/cohort/Cohort"
+import { Candidate } from "~/platform/models/candidate/Candidate"
 
 @Component({})
 export default class CohortModalWrapper extends Vue {
@@ -66,13 +99,22 @@ export default class CohortModalWrapper extends Vue {
 
   currentStep: number = 0;
   opportunityId: string = "";
+  userId: string = "";
 
   get currentCohortState() {
     return cohortStore.currentCohortState
   }
 
+  get currentCohort() {
+    return cohortStore.currentCohort
+  }
+
   get isLoading() {
     return cohortStore.currentCohortState === CohortStates.LOADING
+  }
+
+  get candidates() {
+    return candidateStore.candidates
   }
 
   @Watch("currentCohortState")
@@ -81,6 +123,7 @@ export default class CohortModalWrapper extends Vue {
           this.currentStep += 1
       }
   }
+
   nextStep() {
     if(this.currentStep === 1){
         cohortStore.addCohort(this.opportunityId)

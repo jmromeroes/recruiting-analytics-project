@@ -5,7 +5,7 @@ import { Candidate } from "../models/candidate/Candidate";
 import { JsonConvert } from "json2typescript";
 
 export class CandidatesService extends TypedService {
-  readonly candidatesUrl = "/management/cohort/{}/candidates";
+  readonly candidatesUrl = "/management/cohort/{}/candidates/";
   private jsonConvert: JsonConvert = new JsonConvert();
 
   async fetchCandidatesInCohort(cohortId: Number): Promise<Candidate[]> {

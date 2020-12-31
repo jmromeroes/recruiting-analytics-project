@@ -4,11 +4,11 @@ from recruiting_analytics_backend.business.queries.base import NotFoundQueryExce
 import requests
 
 class TorreQuery:
-    ROOT_URL = "https://torre.bio/api/"
-    
-    def get(self, uri: str, **kwargs) -> Dict:
+    ROOT_URL_CO = "https://torre.co/api/"
+    ROOT_URL_BIO = "https://torre.bio/api/"
 
-        response = requests.get(TorreQuery.ROOT_URL + uri)
+    def get(self, url: str, **kwargs) -> Dict:
+        response = requests.get(url)
 
         if response.status_code == 200:
             return self._build_dto(response.json(), **kwargs)

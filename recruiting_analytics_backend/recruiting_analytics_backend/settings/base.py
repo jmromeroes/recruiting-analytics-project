@@ -32,6 +32,8 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 ALLOWED_HOSTS = ["*"]
 
+APPEND_SLASH=False
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "../static")
 MEDIA_URL = '/media/'
