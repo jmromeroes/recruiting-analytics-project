@@ -22,11 +22,11 @@ class CohortRepository:
 
             return list(map(lambda cohort: cohort.to_domain(), manager.cohorts))
         except User.DoesNotExist:
-            return NotFoundRepositoryException("User with username '{}' was not found in the database".format(manager_username))
+            raise NotFoundRepositoryException("User with username '{}' was not found in the database".format(manager_username))
         except Manager.DoesNotExist:
-            return NotFoundRepositoryException("Manager with username '{}' was not found in the database".format(manager_username))
+            raise NotFoundRepositoryException("Manager with username '{}' was not found in the database".format(manager_username))
         except Exception as e:
-            return RepositoryException(e)
+            raise RepositoryException(e)
 
     @staticmethod
     def create_cohort(cohort_information: CohortInformation, user) -> CohortInformation:
@@ -45,11 +45,14 @@ class CohortRepository:
             cohort_db.platform_opportunity_id = cohort_information.opportunity_id
             cohort_db.opportunity_objective = cohort_information.opportunity_objective
             cohort_db.owner = manager
-            
+
             if len(cohort_information.organizations):
                 cohort_db.organization = Organization.objects.get_or_create(name=cohort_information.organizations[0].name, picture=cohort_information.organization.picture)
             
             cohort_db.slug = cohort_information.slug
+
+            cohort_db.save()
+            return cohort_db.to_domain()
         except Manager.DoesNotExist:
             raise NotFoundRepositoryException("Manager with user id '{}' was not found in the database".format(user.id))
         except Platform.DoesNotExist:

@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 
 from cohort_management.business.queries.db.candidate.fetch_cohort_candidates import FetchCohortCandidates
+from cohort_management.business.queries.db.cohort.fetch_manager_cohorts import ListManagerCohorts
+
 from cohort_management.business.commands.db.cohort.create_new_cohort import CreateNewCohort
 from cohort_management.business.queries.api.torre.cohort.fetch_cohort_information_by_id import FetchCohortInformationById
 
@@ -12,21 +14,26 @@ from recruiting_analytics_backend.business.queries.base import NotFoundQueryExce
 
 import json
 
+import logging 
+_logger = logging.getLogger(__name__)
 
-class CohortAPI(APIView):
+class CohortsAPI(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request, cohort_id):
+    def get(self, request):
         try:
-            query_result = FetchCohortCandidates().execute(cohort_id)
-            return Response(list(map(lambda repo: repo.to_json(), query_result)))
-        except NotFoundRepositoryException:
+            query_result = ListManagerCohorts().execute(request.user.username)
+            return Response(list(map(lambda res: res.to_json(), query_result)))
+        except NotFoundRepositoryException as e:
+            _logger.exception(e)
             return Response(
                 {
-                    "error": "Some resource was not found"},
-                status.HTTP_400_NOT_FOUND
+                    "error": e
+                },
+                status.HTTP_404_NOT_FOUND
             )
-        except Exception:
+        except Exception as e:
+            _logger.exception(e)
             return Response(
                 {"error": "Internal server error"},
                 status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -43,22 +50,28 @@ class CohortAPI(APIView):
 
         try:
             cohort_information = FetchCohortInformationById().execute(opportunity_id)
-            CreateNewCohort().execute(cohort_information, request.user)
+            cohort_information = CreateNewCohort().execute(cohort_information, request.user)
 
             return Response(cohort_information.to_json())
-        except NotFoundQueryException:
+        except NotFoundQueryException as e:
+            _logger.exception(e)
+
             return Response(
                 {
                     "error": "Opportunity with id {} was not found in the api".format(opportunity_id)},
                 status.HTTP_404_NOT_FOUND
             )
-        except DuplicatedRepositoryException:
+        except DuplicatedRepositoryException as e:
+            _logger.exception(e)
+
             return Response(
                 {
                     "error": "Cohort with opportunity id {} already exists for this manager".format(opportunity_id)},
                 status.HTTP_409_CONFLICT
             )
-        except Exception:
+        except Exception as e:
+            _logger.exception(e)
+
             return Response(
                 {"error": "Internal server error"},
                 status.HTTP_500_INTERNAL_SERVER_ERROR

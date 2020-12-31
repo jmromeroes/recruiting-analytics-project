@@ -12,6 +12,7 @@ class OrganizationInformation(BaseValueObject):
 
 @attr.s(auto_attribs=True, frozen=True)
 class CohortInformation(BaseValueObject):
+    id: int
     name: str
     platform_name: str
     opportunity_objective: str

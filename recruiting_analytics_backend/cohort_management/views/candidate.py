@@ -14,6 +14,8 @@ from recruiting_analytics_backend.business.repositories.base import NotFoundRepo
 
 import json
 
+import logging 
+_logger = logging.getLogger(__name__)
 
 class CandidatesAPI(APIView):
     permission_classes = (AllowAny,)
@@ -21,14 +23,18 @@ class CandidatesAPI(APIView):
     def get(self, request, cohort_id):
         try:
             query_result = FetchCohortCandidates().execute(cohort_id)
-            return Response(list(map(lambda repo: repo.to_json(), query_result)))
-        except NotFoundRepositoryException:
+            return Response(list(map(lambda cdt: cdt.to_json(), query_result)))
+        except NotFoundRepositoryException as e:
+            _logger.exception(e)
+
             return Response(
                 {
                     "error": "Some resource was not found"},
                 status.HTTP_404_NOT_FOUND
             )
-        except Exception:
+        except Exception as e:
+            _logger.exception(e)
+
             return Response(
                 {"error": "Internal server error"},
                 status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -45,23 +51,31 @@ class CandidatesAPI(APIView):
 
         try:
             candidate = FetchCandidate().execute(cohort_id, public_id)
-        except NotFoundRepositoryException:
+        except NotFoundRepositoryException as e:
+            _logger.exception(e)
+
             try:
                 candidate = FetchCandidateById().execute(public_id, cohort_id=cohort_id)
                 candidate = AddCandidateToCohort().execute(candidate)
-            except NotFoundQueryException:
+            except NotFoundQueryException as e:
+                _logger.exception(e)
+
                 return Response(
                     {
                         "error": "Candidate with id {} was not found in the api".format(public_id)},
                     status.HTTP_404_NOT_FOUND
                 )
-            except DuplicatedRepositoryException:
+            except DuplicatedRepositoryException as e:
+                _logger.exception(e)
+
                 return Response(
                     {
                         "error": "Candidate with id {} already exists in the cohort with id {}".format(public_id, cohort_id)},
                     status.HTTP_409_CONFLICT
                 )
-            except Exception:
+            except Exception as e:
+                _logger.exception(e)
+
                 return Response(
                     {"error": "Internal server error"},
                     status.HTTP_500_INTERNAL_SERVER_ERROR

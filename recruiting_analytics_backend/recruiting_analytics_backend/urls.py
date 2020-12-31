@@ -5,5 +5,5 @@ from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/obtain_token', obtain_jwt_token),
-    path('cohort/', include('cohort_management.urls')),
+    path('management/', include('cohort_management.urls')),
 ]

@@ -16,6 +16,7 @@ class FetchCohortInformationById(TorreQuery):
 
     def _build_dto(self, cohort_information: Dict, **kwargs) -> CohortInformation:
         return CohortInformation(
+            id=0,
             name=cohort_information.get("objective", ""),
             platform_name="Torre",
             opportunity_objective=cohort_information.get("objective", ""),

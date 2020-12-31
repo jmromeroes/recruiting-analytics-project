@@ -21,9 +21,9 @@ class CandidateRepository:
 
             return list(map(lambda cohort: cohort.to_domain(), candidates))
         except Cohort.DoesNotExist:
-            return NotFoundRepositoryException("Cohort with id '{}' was not found in the database".format(cohort_id))
+            raise NotFoundRepositoryException("Cohort with id '{}' was not found in the database".format(cohort_id))
         except Exception as e:
-            return RepositoryException(e)
+            raise RepositoryException(e)
 
     @staticmethod
     def get_candidate_by_cohort_id_and_platform_user_id(cohort_id: str, platform_user_id: str) -> CandidateInformation:
@@ -33,9 +33,9 @@ class CandidateRepository:
             
             return candidate.to_domain()
         except Candidate.DoesNotExist:
-            return NotFoundRepositoryException("Candidate with id '{}' was not found in the database".format(candidate_id))
+            raise NotFoundRepositoryException("Candidate with id '{}' was not found in the database".format(candidate_id))
         except Exception as e:
-            return RepositoryException(e)
+            raise RepositoryException(e)
 
     @staticmethod
     def add_candidate(candidate_information: CandidateInformation) -> CandidateInformation:
