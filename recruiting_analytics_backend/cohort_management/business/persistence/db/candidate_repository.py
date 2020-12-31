@@ -26,13 +26,10 @@ class CandidateRepository:
             return RepositoryException(e)
 
     @staticmethod
-    def get_candidate_by_cohort_id_and_platform(cohort_id: str, platform_name: str) -> CandidateInformation:
+    def get_candidate_by_cohort_id_and_platform_user_id(cohort_id: str, platform_user_id: str) -> CandidateInformation:
         try:
-            platform = Platform.objects.get(
-                name=platform_name)
-
             candidate = Candidate.objects.get(
-                cohort_id=cohort_id, platform=platform).exists()
+                cohort_id=cohort_id, platform_user_id=platform_user_id).exists()
             
             return candidate.to_domain()
         except Candidate.DoesNotExist:
