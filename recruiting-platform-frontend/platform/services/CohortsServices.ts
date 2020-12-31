@@ -9,17 +9,17 @@ export class CohortsService extends TypedService {
   readonly cohortsUrl = "/management/cohorts";
   private jsonConvert: JsonConvert = new JsonConvert();
 
-  async fetchCohorts(): Promise<Cohort> {
+  async fetchCohorts(): Promise<Cohort[]> {
     return this.get(this.cohortsUrl).then(response => {
-        return this.jsonConvert.deserializeObject(
+        return this.jsonConvert.deserializeArray(
             response.data,
             Cohort
         );
     });
   }
 
-  async addCohort(opportunity_id: string): Promise<Cohort> {
-    return this.post(this.cohortsUrl, {opportunity_id}).then(response => {
+  async addCohort(opportunityId: string): Promise<Cohort> {
+    return this.post(this.cohortsUrl, {opportunityId}).then(response => {
         return this.jsonConvert.deserializeObject(
             response.data,
             Cohort

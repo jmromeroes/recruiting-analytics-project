@@ -13,7 +13,9 @@
 import Vue from "vue";
 import { Component, Watch, Prop } from "vue-property-decorator";
 
-@Component({})
+@Component({
+    middleware: ["authenticated"]
+})
 export default class CohortManagement extends Vue {
 }
 </script>
