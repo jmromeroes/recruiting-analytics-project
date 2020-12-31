@@ -11,18 +11,18 @@ export class CandidatesService extends TypedService {
   async fetchCandidatesInCohort(cohortId: Number): Promise<Candidate[]> {
     return this.get(this.candidatesUrl.replace("{}", cohortId.toString())).then(response => {
       return this.jsonConvert.deserializeArray(
-        JSON.parse(response.data),
+        response.data.map(obj => JSON.parse(obj)),
         Candidate
       );
+    }).catch(error => {
+      console.error(error)
+      return []
     });
   }
 
-  async addCandidate(cohortId: Number, publicId: string): Promise<Candidate> {
+  async addCandidate(cohortId: Number, publicId: string): Promise<Boolean> {
     return this.post(this.candidatesUrl.replace("{}", cohortId.toString()), { public_id: publicId }).then(response => {
-      return this.jsonConvert.deserializeObject(
-        JSON.parse(response.data),
-        Candidate
-      );
+      return true;
     });
   }
 }

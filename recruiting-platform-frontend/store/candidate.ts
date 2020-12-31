@@ -37,7 +37,8 @@ export default class candidate extends VuexModule {
         cohortStore.currentCohort.fold(
             () => {},
             cohort =>
-                this.candidatesService.addCandidate(cohort.id, publicId).then(candidates => {
+                this.candidatesService.addCandidate(cohort.id, publicId).then(candidate => {
+                    console.log(candidate)
                     this.fetchCandidates()
                 })
                 .catch(error => {

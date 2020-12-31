@@ -18,9 +18,7 @@
         opportunity
       </div>
       <div class="action-buttons">
-        <b-button @click="prevStep()" class="torre-button">
-          Close
-        </b-button>
+        <b-button @click="prevStep()" class="torre-button"> Close </b-button>
         <b-button @click="nextStep()" class="torre-button"> Next </b-button>
       </div>
     </div>
@@ -42,12 +40,20 @@
           Yd6vGjdp, VWM2PAwZ, Yd6vLgdp, Prlg9Ldk, EW7k67Wy
         </div>
 
-        <b-input v-model="opportunityId" placeholder="Assing the opportunity to the cohort"> </b-input>
+        <b-input
+          v-model="opportunityId"
+          placeholder="Assing the opportunity to the cohort"
+        >
+        </b-input>
         <div class="action-buttons">
-          <b-button @click="prevStep()" class="torre-button">
-            Back
+          <b-button @click="prevStep()" class="torre-button"> Back </b-button>
+          <b-button
+            @click="nextStep()"
+            :disabled="!opportunityId.length"
+            class="torre-button"
+          >
+            Next
           </b-button>
-          <b-button @click="nextStep()" :disabled="!opportunityId.length" class="torre-button"> Next </b-button>
         </div>
       </div>
     </div>
@@ -55,7 +61,7 @@
       <div class="cohort-form">
         <div class="description-2">
           <span class="yellow-text" v-if="currentCohort">
-              <b>ID: {{currentCohort.id}}</b>
+            <b>ID: {{ currentCohort.id }}</b>
           </span>
           <b>Add your candidates</b>
         </div>
@@ -70,19 +76,51 @@
           Some example ids for you to test with are: jmromeroe, torrenegra,
           rolfveldman, danielabotero, taniazapata, nataliagkioka, kunlaoye
         </div>
-        <b-input v-model="userId" placeholder="Assing the opportunity to the cohort"> </b-input>
+        <b-input
+          v-model="userId"
+          placeholder="Assing the opportunity to the cohort"
+        >
+        </b-input>
 
         <div class="candidates-wrapper">
-            <div>
-
-            </div>
+          <div
+            class="yellow-text"
+            v-for="(candidate, index) in candidates"
+            :key="index"
+          >
+            {{ candidate.publicId }}
+          </div>
         </div>
         <div class="action-buttons">
-          <b-button @click="prevStep()" class="torre-button">
-            Back
+          <b-button
+            :disabled="!userId.length"
+            @click="addCandidate()"
+            class="torre-button"
+          >
+            Add Candidate
           </b-button>
-          <b-button @click="nextStep()" :disabled="!userId.length || isLoading" class="torre-button"> Next </b-button>
         </div>
+        <div class="action-buttons">
+          <b-button @click="prevStep()" class="torre-button"> Back </b-button>
+          <b-button
+            @click="nextStep()"
+            :disabled="isLoading"
+            class="torre-button"
+          >
+            Next
+          </b-button>
+        </div>
+      </div>
+    </div>
+    <div class="cohort-creator-content" v-if="currentStep === 3">
+      <div class="description-2">
+        <b>Cohort creation completed</b>
+      </div>
+      <div class="description-3">
+        Now you can check your cohorts in the main page
+      </div>
+      <div class="action-buttons">
+        <b-button @click="finish()" class="torre-button"> Finish </b-button>
       </div>
     </div>
   </div>
@@ -93,8 +131,8 @@ import Vue from "vue";
 import { Component, Watch, Prop } from "vue-property-decorator";
 import { cohortStore } from "~/store";
 import { candidateStore } from "~/store";
-import { CohortStates } from "~/platform/models/cohort/Cohort"
-import { Candidate } from "~/platform/models/candidate/Candidate"
+import { CohortStates } from "~/platform/models/cohort/Cohort";
+import { Candidate } from "~/platform/models/candidate/Candidate";
 
 @Component({})
 export default class CohortModalWrapper extends Vue {
@@ -105,41 +143,43 @@ export default class CohortModalWrapper extends Vue {
   userId: string = "";
 
   get currentCohortState() {
-    return cohortStore.currentCohortState
+    return cohortStore.currentCohortState;
   }
 
   get currentCohort() {
     return cohortStore.currentCohort.fold(
-        () => undefined,
-        v => v
-    )
+      () => undefined,
+      (v) => v
+    );
   }
 
   get isLoading() {
-    return cohortStore.currentCohortState === CohortStates.LOADING
+    return cohortStore.currentCohortState === CohortStates.LOADING;
   }
 
   get candidates() {
-    return candidateStore.candidates
+    return candidateStore.candidates;
   }
 
   @Watch("currentCohortState")
-  onStateUpdated(newVal: CohortStates, oldVal: CohortStates){
-      if(newVal === CohortStates.CREATED){
-          this.currentStep += 1
-      }
+  onStateUpdated(newVal: CohortStates, oldVal: CohortStates) {
+    if (newVal === CohortStates.CREATED) {
+      this.currentStep += 1;
+    }
+  }
+
+  addCandidate() {
+    candidateStore.addCandidate(this.userId);
   }
 
   nextStep() {
-    if(this.currentStep === 1){
-        cohortStore.addCohort(this.opportunityId)
-    } else if(this.currentStep === 2){
-        candidateStore.addCandidate(this.userId)
+    if (this.currentStep === 1) {
+      cohortStore.addCohort(this.opportunityId);
     } else {
-        this.currentStep += 1
+      this.currentStep += 1;
     }
   }
-    
+
   prevStep() {
     if (this.currentStep == 0) {
       this.hideFunction();
@@ -149,10 +189,15 @@ export default class CohortModalWrapper extends Vue {
     this.currentStep = this.currentStep - 1;
   }
 
+  finish(){
+    location.reload()
+  }
 }
 </script>
 
 <style lang="scss">
+@import "../../assets/scss/base/_variables";
+
 .cohort-modal-wrapper {
   display: flex;
   flex-direction: column;
@@ -173,6 +218,18 @@ export default class CohortModalWrapper extends Vue {
   .cohort-creator-content {
     text-align: center;
     padding: 1rem;
+  }
+
+  .candidates-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    div {
+      border: 1px solid $primary-yellow;
+      border-radius: 3px;
+      min-width: max-content;
+      margin: 0.4rem;
+      padding: 0.5rem;
+    }
   }
 }
 </style>

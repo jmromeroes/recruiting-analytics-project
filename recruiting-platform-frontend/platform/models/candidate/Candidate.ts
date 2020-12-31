@@ -15,7 +15,7 @@ export class JobInformation {
     @JsonProperty("name", String)
     name: string = "";
 
-    @JsonProperty("picture", [Organization])
+    @JsonProperty("organizations", [Organization])
     organizations: Organization[] = [];
 }
 

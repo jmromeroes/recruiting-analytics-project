@@ -21,7 +21,7 @@ class CandidateRepository:
             cohort = Cohort.objects.get(id=cohort_id)
             candidates = Candidate.objects.filter(cohort=cohort)
 
-            return list(map(lambda cohort: cohort.to_domain(), candidates))
+            return list(map(lambda candidate: candidate.to_domain(), candidates))
         except Cohort.DoesNotExist:
             raise NotFoundRepositoryException("Cohort with id '{}' was not found in the database".format(cohort_id))
         except Exception as e:
