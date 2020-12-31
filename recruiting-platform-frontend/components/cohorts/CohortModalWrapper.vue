@@ -54,6 +54,9 @@
     <div class="cohort-creator-content" v-else-if="currentStep === 2">
       <div class="cohort-form">
         <div class="description-2">
+          <span class="yellow-text" v-if="currentCohort">
+              <b>ID: {{currentCohort.id}}</b>
+          </span>
           <b>Add your candidates</b>
         </div>
         <div style="text-align: left" class="description-3">
@@ -71,7 +74,7 @@
 
         <div class="candidates-wrapper">
             <div>
-                
+
             </div>
         </div>
         <div class="action-buttons">
@@ -106,7 +109,10 @@ export default class CohortModalWrapper extends Vue {
   }
 
   get currentCohort() {
-    return cohortStore.currentCohort
+    return cohortStore.currentCohort.fold(
+        () => undefined,
+        v => v
+    )
   }
 
   get isLoading() {
@@ -127,6 +133,8 @@ export default class CohortModalWrapper extends Vue {
   nextStep() {
     if(this.currentStep === 1){
         cohortStore.addCohort(this.opportunityId)
+    } else if(this.currentStep === 2){
+        candidateStore.addCandidate(this.userId)
     } else {
         this.currentStep += 1
     }

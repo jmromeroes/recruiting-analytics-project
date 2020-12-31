@@ -11,6 +11,8 @@ from cohort_management.models.manager import Manager
 from recruiting_analytics_backend.business.repositories.base import NotFoundRepositoryException, RepositoryException, DuplicatedRepositoryException
 from cohort_management.business.domain.cohort.cohort_information import CohortInformation
 
+import logging 
+_logger = logging.getLogger(__name__)
 
 class CohortRepository:
 
@@ -26,6 +28,7 @@ class CohortRepository:
         except Manager.DoesNotExist:
             raise NotFoundRepositoryException("Manager with username '{}' was not found in the database".format(manager_username))
         except Exception as e:
+            _logger.exception(e)
             raise RepositoryException(e)
 
     @staticmethod
@@ -58,4 +61,5 @@ class CohortRepository:
         except Platform.DoesNotExist:
             raise NotFoundRepositoryException("Platform with name '{}' was not found in the database".format(cohort_information.platform_name))
         except Exception as e:
+            _logger.exception(e)
             raise RepositoryException(e)

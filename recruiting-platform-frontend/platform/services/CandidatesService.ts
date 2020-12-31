@@ -11,7 +11,7 @@ export class CandidatesService extends TypedService {
   async fetchCandidatesInCohort(cohortId: Number): Promise<Candidate[]> {
     return this.get(this.candidatesUrl.replace("{}", cohortId.toString())).then(response => {
       return this.jsonConvert.deserializeArray(
-        response.data,
+        JSON.parse(response.data),
         Candidate
       );
     });
@@ -20,7 +20,7 @@ export class CandidatesService extends TypedService {
   async addCandidate(cohortId: Number, publicId: string): Promise<Candidate> {
     return this.post(this.candidatesUrl.replace("{}", cohortId.toString()), { public_id: publicId }).then(response => {
       return this.jsonConvert.deserializeObject(
-        response.data,
+        JSON.parse(response.data),
         Candidate
       );
     });

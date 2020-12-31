@@ -6,7 +6,7 @@
     </div>
 
     <div class="cohorts-wrapper">
-      <CohortCard v-for="cohort in cohorts" :key="cohort.id" :cohort="cohort"/>
+      <CohortCard v-for="(cohort, index) in cohorts" :key="index" :cohort="cohort"/>
       <AddCohortCard />
     </div>
   </div>

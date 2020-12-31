@@ -47,14 +47,13 @@ class Candidate(models.Model):
         return CandidateInformation(
             username=self.platform_username,
             country=self.country,
-            verified=self.verified,
             platform_name=self.platform.name,
             public_id=self.platform_public_id,
             bio=self.platform_candidate_bio,
             strengths=list(
-                map(lambda strength: strength.name, self.strengths)),
+                map(lambda strength: strength.name, self.strengths.all())),
             interests=list(
-                map(lambda interest: interest.name, self.interests)),
+                map(lambda interest: interest.name, self.interests.all())),
             jobs=list(
                 map(lambda job: job.to_domain(), jobs)),
             links=list(
@@ -76,7 +75,7 @@ class CandidateLink(models.Model):
     def to_domain(self):
         return LinkInformation(
             name=self.name,
-            url=self.url
+            url=self.link
         )
 
 
@@ -89,5 +88,5 @@ class Job(models.Model):
         return JobInformation(
             name=self.name,
             organizations=list(
-                map(lambda organization: organization.to_domain(), self.organizations)),
+                map(lambda organization: organization.to_domain(), self.organizations.all())),
         )

@@ -1,3 +1,4 @@
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -11,7 +12,7 @@ from cohort_management.business.commands.db.candidate.add_candidate_to_cohort im
 
 from recruiting_analytics_backend.business.queries.base import NotFoundQueryException, BadRequestQueryException, InternalServerException
 
-from recruiting_analytics_backend.business.repositories.base import NotFoundRepositoryException, DuplicatedRepositoryException
+from recruiting_analytics_backend.business.repositories.base import NotFoundRepositoryException, RepositoryException, DuplicatedRepositoryException
 
 import json
 
@@ -44,13 +45,12 @@ class CandidatesAPI(APIView):
 
     def post(self, request, cohort_id):
         public_id = request.data.get("public_id", "")
-
+        
         if not len(public_id):
             return Response(
                 {"error": "public_id not found in body"},
                 status.HTTP_400_BAD_REQUEST
             )
-
         try:
             candidate = FetchCandidate().execute(cohort_id, public_id)
         except NotFoundRepositoryException as e:

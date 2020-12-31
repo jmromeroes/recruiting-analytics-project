@@ -4,6 +4,7 @@ from django.contrib import admin
 from cohort_management.models.manager import Manager
 from cohort_management.models.cohort import Cohort
 from cohort_management.models.platform import Platform
+from cohort_management.models.candidate import Candidate
 
 @admin.register(Manager)
 class ManagerAdmin(admin.ModelAdmin):
@@ -15,4 +16,8 @@ class CohortAdmin(admin.ModelAdmin):
 
 @admin.register(Platform)
 class PlatformAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Candidate)
+class CandidatesAdmin(admin.ModelAdmin):
     pass

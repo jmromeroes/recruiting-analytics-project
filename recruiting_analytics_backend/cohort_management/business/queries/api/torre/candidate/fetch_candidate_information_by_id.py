@@ -24,18 +24,19 @@ class FetchCandidateById(TorreQuery):
     def _build_link_dto(self, link: Dict) -> LinkInformation:
         return LinkInformation(
             name=link["name"],
-            url=link["address"]
+            url=link.get("address", "")
         )
 
     def _build_dto(self, response: Dict, **kwargs) -> CandidateInformation:
+        print(response)
         return CandidateInformation(
-            username=response.get("name", ""),
-            country=response["location"]["country"],
+            username=response["person"].get("name", ""),
+            country=response["person"]["location"]["country"] if "location" in response["person"] else "No Country",
             platform_name="Torre",
-            public_id=response["publicId"],
+            public_id=response["person"]["publicId"],
             bio=response.get("summaryOfBio", ""),
-            strengths=list(map(lambda strength: strength.name, response.get("strengths", []))),
-            interests=list(map(lambda interest: interest.name, response.get("interests", []))),
+            strengths=list(map(lambda strength: strength["name"], response.get("strengths", []))),
+            interests=list(map(lambda interest: interest["name"], response.get("interests", []))),
             jobs=list(map(self._build_job_dto, response.get("jobs", []))),
             links=list(map(self._build_link_dto, response.get("strengths", []))),
             number_of_strengths=response["stats"].get("strengths", 0),

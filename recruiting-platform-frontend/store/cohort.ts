@@ -48,9 +48,14 @@ export default class cohort extends VuexModule {
     addCohort(opportunityId: string) {
         this.setCurrentCohortState(CohortStates.LOADING)
         this.cohortService.addCohort(opportunityId).then(cohort => {
-            this.setCurrentCohortState(CohortStates.CREATED)
+            console.log("1")
             this.setCohorts(this._cohorts.concat([cohort]))
+            console.log("2")
             this.setCurrentCohort(cohort.id)
+            console.log("3")
+            this.fetchCohorts()
+            console.log("4")
+            this.setCurrentCohortState(CohortStates.CREATED)
         })
         .catch(error => {
             this.setErrorMessage(error.toString())
@@ -64,7 +69,7 @@ export default class cohort extends VuexModule {
 
     @Mutation
     setCurrentCohort(cohortId: Number) {
-        this._currentCohort = Option(this.cohorts.find(cohort => cohort.id === cohortId))
+        this._currentCohort = Option(this._cohorts.find(cohort => cohort.id === cohortId))
     }
 
     @Mutation
