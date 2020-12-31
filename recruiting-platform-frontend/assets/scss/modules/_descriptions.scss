@@ -1,0 +1,80 @@
+@import "../base/_mixins.scss";
+@import "../base/_functions.scss";
+
+$description-1-base: 24;
+$description-2-base: 18;
+$description-3-base: 12;
+$description-4-base: 19;
+
+$decrease-delta: 8;
+
+$line-height-delta: 10;
+
+@mixin global-description(
+  $description-name,
+  $font-size: 28,
+  $color: $primary-color,
+  $font-weight: normal,
+  $line-height: $font-size
+) {
+  .#{$description-name} {
+    color: $color;
+    font-size: #{$font-size}px;
+    font-weight: $font-weight;
+    line-height: #{$line-height}px;
+  }
+}
+
+@mixin global-description-sizes(
+  $decrease-rate,
+  $color: $primary-color,
+  $font-weight: bold
+) {
+  $full-decrease: multiply($decrease-rate, $decrease-delta);
+
+  $description-1-font-size: subtract($description-1-base, $full-decrease);
+  $description-1-line-height: add($description-1-font-size, $line-height-delta);
+  @include global-description(
+    description-1,
+    $description-1-font-size,
+    $line-height: $description-1-line-height
+  );
+
+  $description-2-font-size: subtract($description-2-base, $full-decrease/3);
+  $description-2-line-height: add($description-2-font-size, $line-height-delta);
+  @include global-description(
+    description-2,
+    $description-2-font-size,
+    $line-height: $description-2-line-height
+  );
+
+  $description-3-font-size: subtract($description-3-base, $full-decrease/3);
+  $description-3-line-height: add(
+    $description-3-font-size,
+    $line-height-delta/3
+  );
+  @include global-description(
+    description-3,
+    $description-3-font-size,
+    $line-height: $description-3-line-height
+  );
+
+  $description-4-font-size: subtract($description-4-base, $full-decrease/3);
+  $description-4-line-height: add(
+    $description-4-font-size,
+    $line-height-delta/3
+  );
+  @include global-description(
+    description-4,
+    $description-4-font-size,
+    $line-height: $description-4-line-height
+  );
+}
+
+@include breakpoint(mobile) {
+  @include global-description-sizes(1);
+}
+
+@include breakpoint(desktop) {
+  @include global-description-sizes(0);
+}

@@ -1,0 +1,5 @@
+@import "./variables";
+
+%with-basic-shadow {
+  box-shadow: $basic-box-shadow;
+}

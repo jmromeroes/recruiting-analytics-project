@@ -1,0 +1,52 @@
+@import "../base/_mixins.scss";
+
+$title-1-base: 35;
+$title-2-base: 20;
+
+$decrease-delta: 20;
+
+@mixin global-title(
+  $title-name,
+  $font-size,
+  $color: $primary-color,
+  $font-weight: 500,
+  $line-height: $font-size
+) {
+  .#{$title-name} {
+    color: $color;
+    font-weight: $font-weight;
+    line-height: $line-height;
+    font-size: $font-size;
+  }
+}
+
+@mixin global-title-underline($background: white) {
+  width: 60px;
+  height: 8px;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+  background: $background;
+}
+
+@mixin global-title-sizes($decrease-rate, $color: $primary-color) {
+  @include global-title(
+    title-1,
+    #{$title-1-base - $decrease-rate * $decrease-delta}px
+  );
+  @include global-title(
+    title-2,
+    #{$title-1-base - $decrease-rate * $decrease-delta}px
+  );
+}
+
+.yellow-title-underline {
+  @include global-title-underline(#f8d000);
+}
+
+@include breakpoint(mobile) {
+  @include global-title-sizes(1);
+}
+
+@include breakpoint(desktop) {
+  @include global-title-sizes(0);
+}

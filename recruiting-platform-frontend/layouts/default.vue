@@ -1,20 +1,28 @@
 <template>
   <div>
+    <Header />
     <Nuxt />
   </div>
 </template>
 
-<style>
+<script lang="ts">
+import Vue from "vue";
+import { Component, Watch, Prop } from "vue-property-decorator";
+import Header from "~/components/global/Header";
+
+@Component({
+  components: {
+    Header
+  }
+})
+export default class Default extends Vue {}
+</script>
+
+<style lang="scss">
+@import "../assets/scss/base/_variables";
+
 html {
-  font-family:
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: "Muli", "Helvetica", "Arial", sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -22,6 +30,11 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  background: $primary-background;
+}
+
+body {
+  font-family: "Muli", "Helvetica", "Arial", sans-serif;
 }
 
 *,
@@ -58,5 +71,38 @@ html {
 .button--grey:hover {
   color: #fff;
   background-color: #35495e;
+}
+
+.form-control {
+  background-color: $primary-background;
+  color: $primary-color;
+  margin: 1rem auto;
+}
+
+.form-control::-webkit-input-placeholder {
+  color: $primary-gray;
+  font-size: 13px;
+  border-color: $primary-gray;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+  border-color: $primary-yellow;
+  background-color: $primary-background;
+  color: $primary-color;
 }
 </style>

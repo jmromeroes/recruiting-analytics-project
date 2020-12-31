@@ -1,0 +1,78 @@
+/**
+*  Global Mixins
+*/
+
+@mixin rounded-corner($arc) {
+  -moz-border-radius: $arc;
+  -webkit-border-radius: $arc;
+  border-radius: $arc;
+}
+
+@mixin breakpoint($break: mobile) {
+  @if map-has-key($breakpoints, $break) {
+    @media screen and (min-width: #{map-get($breakpoints, $break)} ) {
+      @content;
+    }
+  } @else {
+    @warn "#{$break} is not a set breakpoint variable";
+  }
+}
+
+@mixin maxwidth($max-width: width-0) {
+  @if map-has-key($maxwidths, $max-width) {
+    max-width: #{map-get($maxwidths, $max-width)};
+  } @else {
+    @warn "#{$max-width} is not a set maxwidths variable";
+  }
+}
+
+@mixin floatable($animation-name, $delta, $max-secs: 4) {
+  .#{$animation-name} {
+    animation: #{$animation-name};
+    animation-duration: #{random($max-secs) + 2}s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+
+  @keyframes #{$animation-name} {
+    from {
+      transform: translate(0, 0px);
+    }
+    60% {
+      transform: translate(0, -15px);
+    }
+    to {
+      transform: translate(0, -0px);
+    }
+  }
+}
+
+@mixin background-color-animation(
+  $animation-name: background-color-animation,
+  $color1: rgba(140, 136, 136, 0.42),
+  $color2: rgba(140, 136, 136, 0.646),
+  $secs: 3
+) {
+  .#{$animation-name} {
+    animation: #{$animation-name};
+    animation-duration: #{$secs}s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+
+  @keyframes #{$animation-name} {
+    from {
+      background-color: $color1;
+    }
+    50% {
+      background-color: $color2;
+    }
+    to {
+      background-color: $color1;
+    }
+  }
+}
+
+@mixin with-basic-shadow {
+  box-shadow: $basic-box-shadow;
+}

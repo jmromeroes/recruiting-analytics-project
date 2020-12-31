@@ -1,0 +1,26 @@
+$font-primary: Assistant;
+$primary-color: hsla(0, 0%, 100%, 0.9);
+$primary-gray: hsla(0, 0%, 100%, 0.65);
+$primary-background: #27292d;
+$primary-yellow: #cddc39;
+$basic-text-shadow: 1px 1px 7px #000;
+$basic-box-shadow: -2px -2px 6px #383b40, 6px 6px 6px rgba(0, 0, 0, 0.24);
+
+$breakpoints: (
+  mobile: 0px,
+  small-tablet: 640px,
+  large-tablet: 800px,
+  desktop: 1300px,
+  large-desktop: 1800px
+);
+
+/*
+  Definition of 1 to 1 max-width values for breakpoints defined above
+*/
+$maxwidths: (
+  mobile: auto,
+  small-tablet: auto,
+  large-tablet: auto,
+  desktop: 1440px,
+  large-desktop: 1440px
+);

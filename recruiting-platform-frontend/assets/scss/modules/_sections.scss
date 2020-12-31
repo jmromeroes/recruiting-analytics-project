@@ -1,0 +1,10 @@
+.sticky-section {
+  position: relative;
+  display: block;
+  align-items: flex-start;
+
+  .sticky-col {
+    position: sticky;
+    top: 2rem;
+  }
+}
