@@ -23,12 +23,10 @@
       ref="add-cohort-modal"
       hide-footer
       hide-header
-      no-close-on-esc
-      no-close-on-backdrop
-      size="md"
+      size="lg"
       centered
     >
-        <CohortModalWrapper :hideFunction="hideModal" />
+        <CandidatesVisualization :cohort="cohort"/>
     </b-modal>
   </div>
 </template>
@@ -36,10 +34,21 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Watch, Prop } from "vue-property-decorator";
-import {Cohort} from "~/platform/models/cohort/Cohort"
-@Component({})
+import {Cohort} from "~/platform/models/cohort/Cohort";
+import CandidatesVisualization from "./CandidatesVisualization";
+
+@Component({
+    components: {
+        CandidatesVisualization
+    }
+    
+})
 export default class CohortCard extends Vue {
     @Prop() cohort: Cohort;
+
+    openModal() {
+        this.$refs["add-cohort-modal"].show();
+    }
 }
 </script>
 
