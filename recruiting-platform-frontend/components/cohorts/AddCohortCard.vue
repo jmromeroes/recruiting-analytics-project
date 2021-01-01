@@ -48,7 +48,7 @@ export default class AddCohortCard extends Vue {
 
 .add-cohort {
   box-shadow: $basic-box-shadow;
-  max-width: 250px;
+  max-width: 200px;
   cursor: pointer;
   padding: .6rem;
   text-align: center;

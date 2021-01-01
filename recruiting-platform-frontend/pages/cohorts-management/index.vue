@@ -20,7 +20,7 @@ import CohortCard from "~/components/cohorts/CohortCard";
 import AddCohortCard from "~/components/cohorts/AddCohortCard";
 
 @Component({
-  middleware: ["authenticated"],
+  middleware: ["authenticated", "loadGeneralData"],
   components: {
       CohortCard,
       AddCohortCard
@@ -53,6 +53,8 @@ export default class CohortManagement extends Vue {
 
   .cohorts-wrapper {
     margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
   }
 }
 </style>

@@ -12,7 +12,7 @@ export class CohortsService extends TypedService {
   async fetchCohorts(): Promise<Cohort[]> {
     return this.get(this.cohortsUrl).then(response => {
       return this.jsonConvert.deserializeArray(
-        JSON.parse(response.data),
+        response.data.map(obj => JSON.parse(obj)),
         Cohort
       );
     });
