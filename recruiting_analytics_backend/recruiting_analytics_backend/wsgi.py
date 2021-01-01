@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'recruiting_analytics_backend.settings')
+os.environ["DJANGO_SETTINGS_MODULE"] = "recruiting_analytics_backend.settings.prod"
 
 application = get_wsgi_application()
