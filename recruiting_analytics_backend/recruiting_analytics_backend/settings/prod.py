@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
 INSTALLED_APPS = list(set(BASE_APPS))
 
