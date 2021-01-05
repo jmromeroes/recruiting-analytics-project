@@ -1,4 +1,4 @@
-django==2.2
+django
 urllib3
 attrs
 cattrs
@@ -11,3 +11,4 @@ django-cors-headers
 djangorestframework
 djangorestframework_jwt==1.11.0
 django-environ
+psycopg2-binary==2.8.2

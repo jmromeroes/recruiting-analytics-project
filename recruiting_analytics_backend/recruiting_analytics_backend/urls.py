@@ -9,4 +9,3 @@ urlpatterns = [
     path('auth/obtain_token', obtain_jwt_token),
     path('management/', include('cohort_management.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_URL)
-
